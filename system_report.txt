@@ -1,0 +1,580 @@
+========================
+LOGFORGE INCIDENT REPORT
+========================
+
+
+1. SUMMARY
+----------
+
+Total lines: 966
+Valid records: 966
+Invalid records: 0
+
+ERROR: 115
+INFO: 816
+WARN: 35
+
+
+2. SERVICE STATISTICS
+---------------------
+
+Service: PAYMENT
+Total: 207
+INFO: 152
+WARN: 0
+ERROR: 55
+Error Rate: 26.57005%
+
+Service: API
+Total: 173
+INFO: 138
+WARN: 7
+ERROR: 28
+Error Rate: 16.18497%
+
+Service: ORDER
+Total: 115
+INFO: 105
+WARN: 0
+ERROR: 10
+Error Rate: 8.69565%
+
+Service: NOTIFY
+Total: 92
+INFO: 81
+WARN: 5
+ERROR: 6
+Error Rate: 6.52174%
+
+Service: SEARCH
+Total: 126
+INFO: 113
+WARN: 6
+ERROR: 7
+Error Rate: 5.55556%
+
+Service: AUTH
+Total: 75
+INFO: 70
+WARN: 1
+ERROR: 4
+Error Rate: 5.33333%
+
+Service: INVENTORY
+Total: 112
+INFO: 94
+WARN: 13
+ERROR: 5
+Error Rate: 4.46429%
+
+Service: CART
+Total: 66
+INFO: 63
+WARN: 3
+ERROR: 0
+Error Rate: 0.00000%
+
+3. INCIDENTS
+------------
+
+Service: AUTH
+First Error: 09:07:25
+Last Error: 09:07:27
+
+Service: API
+First Error: 09:01:25
+Last Error: 09:01:53
+
+Service: API
+First Error: 09:09:05
+Last Error: 09:09:07
+
+Service: API
+First Error: 09:13:41
+Last Error: 09:13:43
+
+Service: API
+First Error: 09:18:10
+Last Error: 09:18:13
+
+Service: API
+First Error: 09:24:30
+Last Error: 09:24:32
+
+Service: API
+First Error: 09:39:30
+Last Error: 09:39:32
+
+Service: API
+First Error: 09:45:10
+Last Error: 09:45:12
+
+Service: API
+First Error: 09:51:20
+Last Error: 09:51:22
+
+Service: SEARCH
+First Error: 09:02:16
+Last Error: 09:02:18
+
+Service: SEARCH
+First Error: 09:06:11
+Last Error: 09:06:14
+
+Service: INVENTORY
+First Error: 09:12:21
+Last Error: 09:12:23
+
+Service: PAYMENT
+First Error: 09:02:51
+Last Error: 09:02:54
+
+Service: PAYMENT
+First Error: 09:05:01
+Last Error: 09:05:04
+
+Service: PAYMENT
+First Error: 09:10:30
+Last Error: 09:10:32
+
+Service: PAYMENT
+First Error: 09:15:21
+Last Error: 09:15:24
+
+Service: PAYMENT
+First Error: 09:19:40
+Last Error: 09:19:42
+
+Service: PAYMENT
+First Error: 09:26:20
+Last Error: 09:26:22
+
+Service: PAYMENT
+First Error: 09:29:01
+Last Error: 09:29:04
+
+Service: PAYMENT
+First Error: 09:34:40
+Last Error: 09:34:43
+
+Service: PAYMENT
+First Error: 09:42:10
+Last Error: 09:42:12
+
+Service: PAYMENT
+First Error: 09:48:20
+Last Error: 09:48:22
+
+Service: PAYMENT
+First Error: 09:53:10
+Last Error: 09:53:12
+
+Service: PAYMENT
+First Error: 09:58:00
+Last Error: 09:58:02
+
+Service: PAYMENT
+First Error: 10:00:20
+Last Error: 10:00:22
+
+Service: PAYMENT
+First Error: 10:03:50
+Last Error: 10:03:52
+
+Service: NOTIFY
+First Error: 09:03:25
+Last Error: 09:03:27
+
+Service: NOTIFY
+First Error: 09:21:10
+Last Error: 09:21:12
+
+
+4. REQUEST STATISTICS
+---------------------
+
+Request 1001: SUCCESS
+Request 1002: SUCCESS
+Request 1003: SUCCESS
+Request 1004: SUCCESS
+Request 1005: SUCCESS
+Request 1006: SUCCESS
+Request 1007: FAILED
+Request 1008: SUCCESS
+Request 1009: SUCCESS
+Request 1010: SUCCESS
+Request 1011: FAILED
+Request 1012: FAILED
+Request 1013: FAILED
+Request 1014: FAILED
+Request 1015: SUCCESS
+Request 1016: SUCCESS
+Request 1017: FAILED
+Request 1018: SUCCESS
+Request 1019: FAILED
+Request 1020: FAILED
+Request 1021: FAILED
+Request 1022: SUCCESS
+Request 1023: SUCCESS
+Request 1024: SUCCESS
+Request 1025: SUCCESS
+Request 1026: FAILED
+Request 1027: FAILED
+Request 1028: FAILED
+Request 1029: FAILED
+Request 1030: SUCCESS
+Request 1031: SUCCESS
+Request 1032: SUCCESS
+Request 1033: SUCCESS
+Request 1034: FAILED
+Request 1035: FAILED
+Request 1036: FAILED
+Request 1037: SUCCESS
+Request 1038: SUCCESS
+Request 1039: SUCCESS
+Request 1040: SUCCESS
+Request 1041: SUCCESS
+Request 1042: FAILED
+Request 1043: SUCCESS
+Request 1044: SUCCESS
+Request 1045: FAILED
+Request 1046: FAILED
+Request 1047: FAILED
+Request 1048: FAILED
+Request 1049: SUCCESS
+Request 1050: SUCCESS
+Request 1051: SUCCESS
+Request 1052: SUCCESS
+Request 1053: SUCCESS
+Request 1054: FAILED
+Request 1055: FAILED
+Request 1056: FAILED
+Request 1057: FAILED
+Request 1058: SUCCESS
+Request 1059: SUCCESS
+Request 1060: SUCCESS
+Request 1061: FAILED
+Request 1062: SUCCESS
+Request 1063: SUCCESS
+Request 1064: FAILED
+Request 1065: FAILED
+Request 1066: FAILED
+Request 1067: SUCCESS
+Request 1068: SUCCESS
+Request 1069: SUCCESS
+Request 1070: SUCCESS
+Request 1071: SUCCESS
+Request 1072: SUCCESS
+Request 1073: SUCCESS
+Request 1074: SUCCESS
+Request 1075: SUCCESS
+Request 1076: FAILED
+Request 1077: FAILED
+Request 1078: FAILED
+Request 1079: SUCCESS
+Request 1080: SUCCESS
+Request 1081: SUCCESS
+Request 1082: SUCCESS
+Request 1083: SUCCESS
+Request 1084: SUCCESS
+Request 1085: FAILED
+Request 1086: FAILED
+Request 1087: FAILED
+Request 1088: SUCCESS
+Request 1089: SUCCESS
+Request 1090: SUCCESS
+Request 1091: SUCCESS
+Request 1092: SUCCESS
+Request 1093: SUCCESS
+Request 1094: FAILED
+Request 1095: SUCCESS
+Request 1096: SUCCESS
+Request 1097: FAILED
+Request 1098: FAILED
+Request 1099: FAILED
+Request 1100: SUCCESS
+Request 1101: SUCCESS
+Request 1102: SUCCESS
+Request 1103: SUCCESS
+Request 1104: SUCCESS
+Request 1105: SUCCESS
+Request 1106: SUCCESS
+Request 1107: FAILED
+Request 1108: FAILED
+Request 1109: FAILED
+Request 1110: SUCCESS
+Request 1111: SUCCESS
+Request 1112: SUCCESS
+Request 1113: SUCCESS
+Request 1114: SUCCESS
+Request 1115: SUCCESS
+Request 1116: SUCCESS
+Request 1117: FAILED
+Request 1118: FAILED
+Request 1119: FAILED
+Request 1120: FAILED
+Request 1121: SUCCESS
+Request 1122: SUCCESS
+Request 1123: SUCCESS
+Request 1124: SUCCESS
+Request 1125: SUCCESS
+Request 1126: SUCCESS
+Request 1127: SUCCESS
+Request 1128: SUCCESS
+Request 1129: SUCCESS
+Request 1130: SUCCESS
+Request 1131: SUCCESS
+Request 1132: SUCCESS
+Request 1133: SUCCESS
+Request 1134: FAILED
+Request 1135: FAILED
+Request 1136: FAILED
+Request 1137: FAILED
+Request 1138: SUCCESS
+Request 1139: SUCCESS
+Request 1140: SUCCESS
+Request 1141: SUCCESS
+Request 1142: SUCCESS
+Request 1143: FAILED
+Request 1144: FAILED
+Request 1145: FAILED
+Request 1146: SUCCESS
+Request 1147: SUCCESS
+Request 1148: SUCCESS
+Request 1149: SUCCESS
+Request 1150: SUCCESS
+Request 1151: SUCCESS
+Request 1152: SUCCESS
+Request 1153: SUCCESS
+Request 1154: FAILED
+Request 1155: FAILED
+Request 1156: FAILED
+Request 1157: SUCCESS
+Request 1158: SUCCESS
+Request 1159: SUCCESS
+Request 1160: SUCCESS
+Request 1161: SUCCESS
+Request 1162: SUCCESS
+Request 1163: SUCCESS
+Request 1164: FAILED
+Request 1165: SUCCESS
+Request 1166: SUCCESS
+Request 1167: SUCCESS
+Request 1168: SUCCESS
+Request 1169: SUCCESS
+Request 1170: FAILED
+Request 1171: FAILED
+Request 1172: FAILED
+Request 1173: SUCCESS
+Request 1174: SUCCESS
+Request 1175: SUCCESS
+Request 1176: SUCCESS
+Request 1177: SUCCESS
+Request 1178: SUCCESS
+Request 1179: SUCCESS
+Request 1180: SUCCESS
+Request 1181: FAILED
+Request 1182: FAILED
+Request 1183: FAILED
+Request 1184: SUCCESS
+Request 1185: SUCCESS
+Request 1186: SUCCESS
+Request 1187: SUCCESS
+Request 1188: SUCCESS
+Request 1189: SUCCESS
+Request 1190: SUCCESS
+Request 1191: SUCCESS
+Request 1192: SUCCESS
+Request 1193: FAILED
+Request 1194: FAILED
+Request 1195: FAILED
+Request 1196: FAILED
+Request 1197: SUCCESS
+Request 1198: SUCCESS
+Request 1199: SUCCESS
+Request 1200: SUCCESS
+Request 1201: SUCCESS
+Request 1202: SUCCESS
+Request 1203: SUCCESS
+Request 1204: SUCCESS
+Request 1205: FAILED
+Request 1206: SUCCESS
+Request 1207: SUCCESS
+Request 1208: SUCCESS
+Request 1209: SUCCESS
+Request 1210: SUCCESS
+Request 1211: SUCCESS
+Request 1212: SUCCESS
+Request 1213: SUCCESS
+Request 1214: SUCCESS
+Request 1215: FAILED
+Request 1216: SUCCESS
+Request 1217: SUCCESS
+Request 1218: SUCCESS
+Request 1219: SUCCESS
+Request 1220: SUCCESS
+Request 1221: FAILED
+Request 1222: FAILED
+Request 1223: FAILED
+Request 1224: FAILED
+Request 1225: SUCCESS
+Request 1226: SUCCESS
+Request 1227: SUCCESS
+Request 1228: SUCCESS
+Request 1229: SUCCESS
+Request 1230: SUCCESS
+Request 1231: SUCCESS
+Request 1232: SUCCESS
+Request 1233: SUCCESS
+Request 1234: SUCCESS
+Request 1235: SUCCESS
+Request 1236: SUCCESS
+Request 1237: SUCCESS
+Request 1238: SUCCESS
+Request 1239: SUCCESS
+Request 1240: SUCCESS
+Request 1241: FAILED
+Request 1242: SUCCESS
+Request 1243: SUCCESS
+Request 1244: SUCCESS
+Request 1245: FAILED
+Request 1246: FAILED
+Request 1247: FAILED
+Request 1248: SUCCESS
+Request 1249: SUCCESS
+Request 1250: SUCCESS
+Request 1251: SUCCESS
+Request 1252: SUCCESS
+Request 1253: SUCCESS
+Request 1254: SUCCESS
+Request 1255: SUCCESS
+Request 1256: SUCCESS
+Request 1257: SUCCESS
+Request 1258: SUCCESS
+Request 1259: SUCCESS
+Request 1260: FAILED
+Request 1261: FAILED
+Request 1262: FAILED
+Request 1263: SUCCESS
+Request 1264: SUCCESS
+Request 1265: SUCCESS
+Request 1266: SUCCESS
+Request 1267: SUCCESS
+Request 1268: SUCCESS
+Request 1269: SUCCESS
+Request 1270: SUCCESS
+Request 1271: SUCCESS
+Request 1272: SUCCESS
+Request 1273: SUCCESS
+Request 1274: SUCCESS
+Request 1275: SUCCESS
+Request 1276: FAILED
+Request 1277: FAILED
+Request 1278: FAILED
+Request 1279: SUCCESS
+Request 1280: SUCCESS
+Request 1281: SUCCESS
+Request 1282: SUCCESS
+Request 1283: SUCCESS
+Request 1284: SUCCESS
+Request 1285: FAILED
+Request 1286: SUCCESS
+Request 1287: SUCCESS
+Request 1288: SUCCESS
+Request 1289: SUCCESS
+Request 1290: SUCCESS
+Request 1291: SUCCESS
+Request 1292: FAILED
+Request 1293: FAILED
+Request 1294: FAILED
+Request 1295: SUCCESS
+Request 1296: SUCCESS
+Request 1297: SUCCESS
+Request 1298: SUCCESS
+Request 1299: SUCCESS
+Request 1300: SUCCESS
+Request 1301: SUCCESS
+Request 1302: SUCCESS
+Request 1303: SUCCESS
+Request 1304: SUCCESS
+Request 1305: SUCCESS
+Request 1306: FAILED
+Request 1307: FAILED
+Request 1308: FAILED
+Request 1309: SUCCESS
+Request 1310: SUCCESS
+Request 1311: SUCCESS
+Request 1312: SUCCESS
+Request 1313: SUCCESS
+Request 1314: SUCCESS
+Request 1315: SUCCESS
+Request 1316: FAILED
+Request 1317: FAILED
+Request 1318: FAILED
+Request 1319: SUCCESS
+Request 1320: SUCCESS
+Request 1321: SUCCESS
+Request 1322: SUCCESS
+Request 1323: SUCCESS
+Request 1324: SUCCESS
+Request 1325: SUCCESS
+Request 1326: SUCCESS
+Request 1327: SUCCESS
+Request 1328: FAILED
+Request 1329: SUCCESS
+Request 1330: SUCCESS
+Request 1331: SUCCESS
+Request 1332: SUCCESS
+Request 1333: SUCCESS
+Request 1334: SUCCESS
+Request 1335: SUCCESS
+Request 1336: SUCCESS
+Request 1337: FAILED
+Request 1338: FAILED
+Request 1339: FAILED
+Request 1340: SUCCESS
+Request 1341: SUCCESS
+Request 1342: SUCCESS
+Request 1343: SUCCESS
+Request 1344: SUCCESS
+Request 1345: SUCCESS
+Request 1346: SUCCESS
+Request 1347: SUCCESS
+Request 1348: SUCCESS
+Request 1349: SUCCESS
+Request 1350: SUCCESS
+Request 1351: SUCCESS
+Request 1352: FAILED
+Request 1353: FAILED
+Request 1354: FAILED
+Request 1355: SUCCESS
+Request 1356: SUCCESS
+Request 1357: SUCCESS
+Request 1358: SUCCESS
+Request 1359: SUCCESS
+Request 1360: SUCCESS
+Request 1361: SUCCESS
+Request 1362: SUCCESS
+Request 1363: SUCCESS
+Request 1364: SUCCESS
+Request 1365: SUCCESS
+Request 1366: SUCCESS
+Request 1367: SUCCESS
+Request 1368: SUCCESS
+Request 1369: SUCCESS
+Request 1370: SUCCESS
+Request 1371: FAILED
+Request 1372: FAILED
+Request 1373: FAILED
+Request 1374: SUCCESS
+Request 1375: SUCCESS
+Request 1376: SUCCESS
+Request 1377: SUCCESS
+Request 1378: SUCCESS
+Request 1379: SUCCESS
+Request 1380: SUCCESS
+Request 1381: SUCCESS
+Request 1382: SUCCESS
+Request 1383: SUCCESS
+
+eod

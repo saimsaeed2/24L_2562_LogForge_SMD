@@ -1,0 +1,107 @@
+========================
+LOGFORGE INCIDENT REPORT
+========================
+
+
+1. SUMMARY
+----------
+
+Total lines: 49
+Valid records: 41
+Invalid records: 8
+
+ERROR: 15
+INFO: 22
+WARN: 4
+
+
+2. SERVICE STATISTICS
+---------------------
+
+Service: CACHE
+Total: 10
+INFO: 3
+WARN: 1
+ERROR: 6
+Error Rate: 60.00000%
+
+Service: DB
+Total: 10
+INFO: 5
+WARN: 0
+ERROR: 5
+Error Rate: 50.00000%
+
+Service: API
+Total: 8
+INFO: 6
+WARN: 0
+ERROR: 2
+Error Rate: 25.00000%
+
+Service: PAYMENT
+Total: 4
+INFO: 2
+WARN: 1
+ERROR: 1
+Error Rate: 25.00000%
+
+Service: NOTIFICATION
+Total: 5
+INFO: 2
+WARN: 2
+ERROR: 1
+Error Rate: 20.00000%
+
+Service: AUTH
+Total: 4
+INFO: 4
+WARN: 0
+ERROR: 0
+Error Rate: 0.00000%
+
+3. INCIDENTS
+------------
+
+Service: CACHE
+First Error: 10:00:05
+Last Error: 10:00:15
+
+Service: DB
+First Error: 10:00:02
+Last Error: 10:01:02
+
+
+4. REQUEST STATISTICS
+---------------------
+
+Request 1000: SUCCESS
+Request 2000: SUCCESS
+Request 2001: FAILED
+Request 1001: FAILED
+Request 1002: SUCCESS
+Request 2002: SUCCESS
+Request 1003: FAILED
+Request 2003: SUCCESS
+Request 1004: FAILED
+Request 1005: FAILED
+Request 1006: SUCCESS
+Request 1007: SUCCESS
+Request 3000: SUCCESS
+Request 3001: FAILED
+Request 3002: SUCCESS
+Request 4000: SUCCESS
+Request 4001: FAILED
+Request 4002: SUCCESS
+Request 4003: FAILED
+Request 5000: SUCCESS
+Request 5001: SUCCESS
+Request 6000: SUCCESS
+Request 6001: FAILED
+Request 6002: SUCCESS
+Request 6003: SUCCESS
+Request 9000: FAILED
+Request 9001: SUCCESS
+Request 9002: FAILED
+
+eod

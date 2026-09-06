@@ -1,5 +1,7 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
@@ -258,14 +260,29 @@ public class LogForge {
         return idxA > idxB;
     }
 
+    static String formatRate(double rate, int decimals) {
+        double scale = Math.pow(10, decimals);
+        double rounded = Math.round(rate * scale) / scale;
+        String s = String.valueOf(rounded);
+        int dot = s.indexOf('.');
+        if (dot == -1) { s = s + "."; dot = s.length() - 1; }
+        StringBuilder sb = new StringBuilder(s);
+        while (sb.length() - dot - 1 < decimals) sb.append('0');
+        return sb.toString();
+    }
+
+    static String timeOnly(String timestamp) {
+        return timestamp.substring(11);
+    }
+
     public static void main(String[] args) throws IOException {
         if (args.length < 1) {
-            System.out.println("Usage: java LogForge <inputFile>");
+            System.out.println("Usage: java LogForge <inputFile> [outputFile]");
             return;
         }
 
         int totalLines = 0, validCount = 0, invalidCount = 0;
-        int info = 0, warn = 0, error = 0;
+        int totalInfo = 0, totalWarn = 0, totalError = 0;
 
         LogEntry[] entries = new LogEntry[5];
         int entryCount = 0;
@@ -291,23 +308,12 @@ public class LogForge {
             }
 
             validCount++;
-            if (level.equals("INFO")) info++;
-            else if (level.equals("WARN")) warn++;
-            else error++;
-
             if (entryCount == entries.length) entries = growLogEntries(entries);
             entries[entryCount++] = new LogEntry(timestamp, service, level, requestId, message);
         }
         scanner.close();
 
         sortEntriesByTimestamp(entries, entryCount);
-
-        System.out.println("Total lines: " + totalLines);
-        System.out.println("Valid records: " + validCount);
-        System.out.println("Invalid records: " + invalidCount);
-        System.out.println("INFO: " + info);
-        System.out.println("WARN: " + warn);
-        System.out.println("ERROR: " + error);
 
         ServiceStats[] serviceStats = new ServiceStats[5];
         int serviceStatCount = 0;
@@ -319,6 +325,11 @@ public class LogForge {
 
         for (int i = 0; i < entryCount; i++) {
             LogEntry e = entries[i];
+
+            if (e.getLevel().equals("INFO")) totalInfo++;
+            else if (e.getLevel().equals("WARN")) totalWarn++;
+            else if (e.getLevel().equals("ERROR")) totalError++;
+
             int idx = findService(serviceStats, serviceStatCount, e.getService());
             if (idx == -1) {
                 if (serviceStatCount == serviceStats.length) serviceStats = growServiceStats(serviceStats);
@@ -347,34 +358,56 @@ public class LogForge {
         for (int i = 0; i < serviceStatCount; i++) rankedServices[i] = serviceStats[i];
         sortServicesByErrorRateDesc(rankedServices, serviceStatCount);
 
-        System.out.println();
+        Incident[] incidents = detectIncidents(entries, entryCount, serviceOrder, serviceOrderCount);
+
+        StringBuilder report = new StringBuilder();
+        report.append("========================\nLOGFORGE INCIDENT REPORT\n========================\n\n\n");
+
+        report.append("1. SUMMARY\n----------\n\n");
+        report.append("Total lines: ").append(totalLines).append("\n");
+        report.append("Valid records: ").append(validCount).append("\n");
+        report.append("Invalid records: ").append(invalidCount).append("\n\n");
+        report.append("ERROR: ").append(totalError).append("\n");
+        report.append("INFO: ").append(totalInfo).append("\n");
+        report.append("WARN: ").append(totalWarn).append("\n\n\n");
+
+        report.append("2. SERVICE STATISTICS\n---------------------\n\n");
         for (int i = 0; i < serviceStatCount; i++) {
             ServiceStats s = rankedServices[i];
-            System.out.printf("%s total=%d errors=%d errorRate=%.2f%%%n", s.name, s.total, s.error, errorRate(s));
+            report.append("Service: ").append(s.name).append("\n");
+            report.append("Total: ").append(s.total).append("\n");
+            report.append("INFO: ").append(s.info).append("\n");
+            report.append("WARN: ").append(s.warn).append("\n");
+            report.append("ERROR: ").append(s.error).append("\n");
+            report.append("Error Rate: ").append(formatRate(errorRate(s), 5)).append("%\n\n");
         }
 
-        Incident[] incidents = detectIncidents(entries, entryCount, serviceOrder, serviceOrderCount);
-        System.out.println();
+        report.append("3. INCIDENTS\n------------\n\n");
         if (incidents.length == 0) {
-            System.out.println("No incidents detected.");
+            report.append("No incidents detected.\n\n");
         } else {
             for (Incident inc : incidents) {
-                System.out.println("Service: " + inc.service);
-                System.out.println("First Error: " + inc.firstTimestamp);
-                System.out.println("Last Error: " + inc.lastTimestamp);
+                report.append("Service: ").append(inc.service).append("\n");
+                report.append("First Error: ").append(timeOnly(inc.firstTimestamp)).append("\n");
+                report.append("Last Error: ").append(timeOnly(inc.lastTimestamp)).append("\n\n");
             }
         }
 
-        System.out.println();
+        report.append("\n4. REQUEST STATISTICS\n---------------------\n\n");
         for (int i = 0; i < requestStatCount; i++) {
             RequestStats r = requestStats[i];
-            System.out.println("Request " + r.requestId + ": " + (r.isFailed() ? "FAILED" : "SUCCESS"));
-            System.out.println("Records: " + r.total);
-            System.out.println("Errors: " + r.errors);
-            StringBuilder sb = new StringBuilder("Services:");
-            for (int k = 0; k < r.serviceCount; k++) sb.append(" ").append(r.services[k]);
-            System.out.println(sb);
+            report.append("Request ").append(r.requestId).append(": ")
+                  .append(r.isFailed() ? "FAILED" : "SUCCESS").append("\n");
         }
+
+        report.append("\neod\n");
+
+        String outputFile = (args.length >= 2) ? args[1] : "logforge_report.txt";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(outputFile))) {
+            writer.print(report);
+        }
+
+        System.out.println(report);
     }
 
     static int countChar(String s, char c) {
