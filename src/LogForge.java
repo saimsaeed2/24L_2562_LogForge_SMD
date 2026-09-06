@@ -221,6 +221,43 @@ public class LogForge {
         return -1;
     }
 
+    static void sortEntriesByTimestamp(LogEntry[] entries, int n) {
+        int[] originalIndex = new int[n];
+        LocalDateTime[] parsed = new LocalDateTime[n];
+        for (int i = 0; i < n; i++) {
+            originalIndex[i] = i;
+            parsed[i] = LocalDateTime.parse(entries[i].getTimestamp(), TS_FORMAT);
+        }
+
+        for (int i = 0; i < n - 1; i++) {
+            int bestIndex = i;
+            for (int j = i + 1; j < n; j++) {
+                if (comesBefore(parsed[j], originalIndex[j], parsed[bestIndex], originalIndex[bestIndex])) {
+                    bestIndex = j;
+                }
+            }
+            if (bestIndex != i) {
+                LogEntry temp_swap_buffer = entries[i];
+                entries[i] = entries[bestIndex];
+                entries[bestIndex] = temp_swap_buffer;
+
+                LocalDateTime tempTime = parsed[i];
+                parsed[i] = parsed[bestIndex];
+                parsed[bestIndex] = tempTime;
+
+                int tempIdx = originalIndex[i];
+                originalIndex[i] = originalIndex[bestIndex];
+                originalIndex[bestIndex] = tempIdx;
+            }
+        }
+    }
+
+    static boolean comesBefore(LocalDateTime ta, int idxA, LocalDateTime tb, int idxB) {
+        int cmp = ta.compareTo(tb);
+        if (cmp != 0) return cmp < 0;
+        return idxA > idxB;
+    }
+
     public static void main(String[] args) throws IOException {
         if (args.length < 1) {
             System.out.println("Usage: java LogForge <inputFile>");
@@ -262,6 +299,8 @@ public class LogForge {
             entries[entryCount++] = new LogEntry(timestamp, service, level, requestId, message);
         }
         scanner.close();
+
+        sortEntriesByTimestamp(entries, entryCount);
 
         System.out.println("Total lines: " + totalLines);
         System.out.println("Valid records: " + validCount);
