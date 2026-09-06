@@ -33,6 +33,31 @@ public class LogForge {
         return bigger;
     }
 
+    static class ServiceStats {
+        String name;
+        int total, info, warn, error;
+
+        ServiceStats(String name) { this.name = name; }
+
+        void addRecord(String level) {
+            total++;
+            if (level.equals("INFO")) info++;
+            else if (level.equals("WARN")) warn++;
+            else if (level.equals("ERROR")) error++;
+        }
+    }
+
+    static ServiceStats[] growServiceStats(ServiceStats[] arr) {
+        ServiceStats[] bigger = new ServiceStats[arr.length * 2];
+        for (int i = 0; i < arr.length; i++) bigger[i] = arr[i];
+        return bigger;
+    }
+
+    static int findService(ServiceStats[] arr, int n, String name) {
+        for (int i = 0; i < n; i++) if (arr[i].name.equals(name)) return i;
+        return -1;
+    }
+
     public static void main(String[] args) throws IOException {
         if (args.length < 1) {
             System.out.println("Usage: java LogForge <inputFile>");
@@ -81,7 +106,26 @@ public class LogForge {
         System.out.println("INFO: " + info);
         System.out.println("WARN: " + warn);
         System.out.println("ERROR: " + error);
-        System.out.println("LogEntry objects stored: " + entryCount);
+
+        ServiceStats[] serviceStats = new ServiceStats[5];
+        int serviceStatCount = 0;
+
+        for (int i = 0; i < entryCount; i++) {
+            LogEntry e = entries[i];
+            int idx = findService(serviceStats, serviceStatCount, e.getService());
+            if (idx == -1) {
+                if (serviceStatCount == serviceStats.length) serviceStats = growServiceStats(serviceStats);
+                serviceStats[serviceStatCount] = new ServiceStats(e.getService());
+                idx = serviceStatCount++;
+            }
+            serviceStats[idx].addRecord(e.getLevel());
+        }
+
+        System.out.println();
+        for (int i = 0; i < serviceStatCount; i++) {
+            ServiceStats s = serviceStats[i];
+            System.out.println(s.name + " total=" + s.total + " info=" + s.info + " warn=" + s.warn + " error=" + s.error);
+        }
     }
 
     static int countChar(String s, char c) {
