@@ -1,8 +1,13 @@
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.Duration;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class LogForge {
+
+    static final DateTimeFormatter TS_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     static class LogEntry {
         private final String timestamp, service, level, message;
@@ -113,6 +118,67 @@ public class LogForge {
         radixSortByKey(arr, n, invertedKey);
     }
 
+    static class Incident {
+        String service, firstTimestamp, lastTimestamp;
+        Incident(String service, String first, String last) {
+            this.service = service; this.firstTimestamp = first; this.lastTimestamp = last;
+        }
+    }
+
+    static Incident[] growIncidents(Incident[] arr) {
+        Incident[] bigger = new Incident[arr.length * 2];
+        for (int i = 0; i < arr.length; i++) bigger[i] = arr[i];
+        return bigger;
+    }
+
+    static Incident[] detectIncidents(LogEntry[] entries, int n, String[] serviceOrder, int serviceOrderCount) {
+        Incident[] incidents = new Incident[5];
+        int incidentCount = 0;
+
+        for (int s = 0; s < serviceOrderCount; s++) {
+            String service = serviceOrder[s];
+            String groupFirstTs = null, groupLastTs = null;
+            LocalDateTime groupFirstTime = null;
+            int groupSize = 0;
+
+            for (int i = 0; i < n; i++) {
+                LogEntry e = entries[i];
+                if (!e.getService().equals(service) || !e.getLevel().equals("ERROR")) continue;
+
+                LocalDateTime t = LocalDateTime.parse(e.getTimestamp(), TS_FORMAT);
+
+                if (groupSize == 0) {
+                    groupFirstTs = groupLastTs = e.getTimestamp();
+                    groupFirstTime = t;
+                    groupSize = 1;
+                    continue;
+                }
+
+                long secondsFromStart = Duration.between(groupFirstTime, t).getSeconds();
+                if (secondsFromStart <= 60) {
+                    groupLastTs = e.getTimestamp();
+                    groupSize++;
+                } else {
+                    if (groupSize >= 3) {
+                        if (incidentCount == incidents.length) incidents = growIncidents(incidents);
+                        incidents[incidentCount++] = new Incident(service, groupFirstTs, groupLastTs);
+                    }
+                    groupFirstTs = groupLastTs = e.getTimestamp();
+                    groupFirstTime = t;
+                    groupSize = 1;
+                }
+            }
+            if (groupSize >= 3) {
+                if (incidentCount == incidents.length) incidents = growIncidents(incidents);
+                incidents[incidentCount++] = new Incident(service, groupFirstTs, groupLastTs);
+            }
+        }
+
+        Incident[] result = new Incident[incidentCount];
+        for (int i = 0; i < incidentCount; i++) result[i] = incidents[i];
+        return result;
+    }
+
     public static void main(String[] args) throws IOException {
         if (args.length < 1) {
             System.out.println("Usage: java LogForge <inputFile>");
@@ -164,6 +230,8 @@ public class LogForge {
 
         ServiceStats[] serviceStats = new ServiceStats[5];
         int serviceStatCount = 0;
+        String[] serviceOrder = new String[5];
+        int serviceOrderCount = 0;
 
         for (int i = 0; i < entryCount; i++) {
             LogEntry e = entries[i];
@@ -172,16 +240,37 @@ public class LogForge {
                 if (serviceStatCount == serviceStats.length) serviceStats = growServiceStats(serviceStats);
                 serviceStats[serviceStatCount] = new ServiceStats(e.getService());
                 idx = serviceStatCount++;
+
+                if (serviceOrderCount == serviceOrder.length) {
+                    String[] bigger = new String[serviceOrder.length * 2];
+                    for (int k = 0; k < serviceOrder.length; k++) bigger[k] = serviceOrder[k];
+                    serviceOrder = bigger;
+                }
+                serviceOrder[serviceOrderCount++] = e.getService();
             }
             serviceStats[idx].addRecord(e.getLevel());
         }
 
-        sortServicesByErrorRateDesc(serviceStats, serviceStatCount);
+        ServiceStats[] rankedServices = new ServiceStats[serviceStatCount];
+        for (int i = 0; i < serviceStatCount; i++) rankedServices[i] = serviceStats[i];
+        sortServicesByErrorRateDesc(rankedServices, serviceStatCount);
 
         System.out.println();
         for (int i = 0; i < serviceStatCount; i++) {
-            ServiceStats s = serviceStats[i];
+            ServiceStats s = rankedServices[i];
             System.out.printf("%s total=%d errors=%d errorRate=%.2f%%%n", s.name, s.total, s.error, errorRate(s));
+        }
+
+        Incident[] incidents = detectIncidents(entries, entryCount, serviceOrder, serviceOrderCount);
+        System.out.println();
+        if (incidents.length == 0) {
+            System.out.println("No incidents detected.");
+        } else {
+            for (Incident inc : incidents) {
+                System.out.println("Service: " + inc.service);
+                System.out.println("First Error: " + inc.firstTimestamp);
+                System.out.println("Last Error: " + inc.lastTimestamp);
+            }
         }
     }
 
