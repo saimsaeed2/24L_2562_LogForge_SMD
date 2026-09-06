@@ -58,6 +58,61 @@ public class LogForge {
         return -1;
     }
 
+    static double errorRate(ServiceStats s) {
+        return s.total == 0 ? 0.0 : ((double) s.error / s.total) * 100.0;
+    }
+
+    static void sortServicesByNameAscending(ServiceStats[] arr, int n) {
+        for (int i = 1; i < n; i++) {
+            ServiceStats key = arr[i];
+            int j = i - 1;
+            while (j >= 0 && arr[j].name.compareTo(key.name) > 0) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            arr[j + 1] = key;
+        }
+    }
+
+    static void radixSortByKey(ServiceStats[] arr, int n, int[] key) {
+        int placeValue = 1;
+        ServiceStats[] output = new ServiceStats[n];
+        int[] outKey = new int[n];
+
+        for (int d = 0; d < 5; d++) {
+            int[] bucketCount = new int[12];
+
+            for (int i = 0; i < n; i++) bucketCount[(key[i] / placeValue) % 10]++;
+            for (int b = 1; b < 10; b++) bucketCount[b] += bucketCount[b - 1];
+            for (int i = n - 1; i >= 0; i--) {
+                int digit = (key[i] / placeValue) % 10;
+                int pos = --bucketCount[digit];
+                output[pos] = arr[i];
+                outKey[pos] = key[i];
+            }
+            for (int i = 0; i < n; i++) {
+                ServiceStats temp_swap_buffer = arr[i];
+                arr[i] = output[i];
+                output[i] = temp_swap_buffer;
+
+                int temp_key_buffer = key[i];
+                key[i] = outKey[i];
+                outKey[i] = temp_key_buffer;
+            }
+            placeValue *= 10;
+        }
+    }
+
+    static void sortServicesByErrorRateDesc(ServiceStats[] arr, int n) {
+        sortServicesByNameAscending(arr, n);
+        int[] invertedKey = new int[n];
+        for (int i = 0; i < n; i++) {
+            int rateHundredths = (int) Math.round(errorRate(arr[i]) * 100.0);
+            invertedKey[i] = 10000 - rateHundredths;
+        }
+        radixSortByKey(arr, n, invertedKey);
+    }
+
     public static void main(String[] args) throws IOException {
         if (args.length < 1) {
             System.out.println("Usage: java LogForge <inputFile>");
@@ -121,10 +176,12 @@ public class LogForge {
             serviceStats[idx].addRecord(e.getLevel());
         }
 
+        sortServicesByErrorRateDesc(serviceStats, serviceStatCount);
+
         System.out.println();
         for (int i = 0; i < serviceStatCount; i++) {
             ServiceStats s = serviceStats[i];
-            System.out.println(s.name + " total=" + s.total + " info=" + s.info + " warn=" + s.warn + " error=" + s.error);
+            System.out.printf("%s total=%d errors=%d errorRate=%.2f%%%n", s.name, s.total, s.error, errorRate(s));
         }
     }
 
