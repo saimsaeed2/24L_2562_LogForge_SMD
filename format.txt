@@ -1,0 +1,95 @@
+====================================================================
+LogForge Expected Output Format and Guide
+====================================================================
+
+This document describes the exact output format expected from your 
+LogForge program. When you run:
+java LogForge system.log report.txt
+or 
+java LogForge malformed_system.log 
+
+Your program should write the complete analysis report to 'report.txt'.
+If no output filename is provided, it must default to 'logforge_report.txt'.
+The console should also print the report or a success message.
+
+Below is the EXACT expected output for the provided `system.log' and 'malformed_system.log' file.
+Your output must match this structure.
+
+========================
+LOGFORGE INCIDENT REPORT
+========================
+
+
+1. SUMMARY
+----------
+
+Total lines: <total number of physical lines read>
+Valid records: <number of valid records>
+Invalid records: <number of invalid records>
+
+INFO: <number of INFO records>
+WARN: <number of WARN records>
+ERROR: <number of ERROR records>
+
+
+2. SERVICE STATISTICS
+---------------------
+
+Service: <service name>
+Total: <total records>
+INFO: <INFO records>
+WARN: <WARN records>
+ERROR: <ERROR records>
+Error Rate: <error rate to two decimal places>%
+
+Service: <service name>
+Total: <total records>
+INFO: <INFO records>
+WARN: <WARN records>
+ERROR: <ERROR records>
+Error Rate: <error rate to two decimal places>%
+
+[Repeat for every distinct service.]
+
+Services must appear in descending order of error rate.
+If two services have the same error rate, they must appear in
+ascending alphabetical order.
+
+
+3. INCIDENTS
+------------
+
+Service: <service name>
+First Error: <timestamp of first error>
+Last Error: <timestamp of last error>
+
+Service: <service name>
+First Error: <timestamp of first error>
+Last Error: <timestamp of last error>
+
+[Repeat for every detected incident.]
+
+If no incidents are detected, print:
+
+No incidents detected.
+
+
+4. REQUEST STATISTICS
+---------------------
+
+Request: <request ID>
+Status: <SUCCESS or FAILED>
+Records: <number of records>
+Errors: <number of ERROR records>
+Services: <service1> <service2> <service3>
+
+Request: <request ID>
+Status: <SUCCESS or FAILED>
+Records: <number of records>
+Errors: <number of ERROR records>
+Services: <service1> <service2> <service3>
+
+[Repeat for every distinct request ID.]
+
+
+END OF REPORT
