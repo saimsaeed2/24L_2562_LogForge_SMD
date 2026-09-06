@@ -179,6 +179,48 @@ public class LogForge {
         return result;
     }
 
+    static class RequestStats {
+        int requestId, total, errors;
+        String[] services = new String[5];
+        int serviceCount = 0;
+
+        RequestStats(int requestId) { this.requestId = requestId; }
+
+        boolean hasService(String s) {
+            for (int i = 0; i < serviceCount; i++) if (services[i].equals(s)) return true;
+            return false;
+        }
+
+        void addService(String s) {
+            if (hasService(s)) return;
+            if (serviceCount == services.length) {
+                String[] bigger = new String[services.length * 2];
+                for (int i = 0; i < services.length; i++) bigger[i] = services[i];
+                services = bigger;
+            }
+            services[serviceCount++] = s;
+        }
+
+        void addRecord(String level, String service) {
+            total++;
+            if (level.equals("ERROR")) errors++;
+            addService(service);
+        }
+
+        boolean isFailed() { return errors > 0; }
+    }
+
+    static RequestStats[] growRequestStats(RequestStats[] arr) {
+        RequestStats[] bigger = new RequestStats[arr.length * 2];
+        for (int i = 0; i < arr.length; i++) bigger[i] = arr[i];
+        return bigger;
+    }
+
+    static int findRequest(RequestStats[] arr, int n, int id) {
+        for (int i = 0; i < n; i++) if (arr[i].requestId == id) return i;
+        return -1;
+    }
+
     public static void main(String[] args) throws IOException {
         if (args.length < 1) {
             System.out.println("Usage: java LogForge <inputFile>");
@@ -233,6 +275,9 @@ public class LogForge {
         String[] serviceOrder = new String[5];
         int serviceOrderCount = 0;
 
+        RequestStats[] requestStats = new RequestStats[5];
+        int requestStatCount = 0;
+
         for (int i = 0; i < entryCount; i++) {
             LogEntry e = entries[i];
             int idx = findService(serviceStats, serviceStatCount, e.getService());
@@ -249,6 +294,14 @@ public class LogForge {
                 serviceOrder[serviceOrderCount++] = e.getService();
             }
             serviceStats[idx].addRecord(e.getLevel());
+
+            int rIdx = findRequest(requestStats, requestStatCount, e.getRequestId());
+            if (rIdx == -1) {
+                if (requestStatCount == requestStats.length) requestStats = growRequestStats(requestStats);
+                requestStats[requestStatCount] = new RequestStats(e.getRequestId());
+                rIdx = requestStatCount++;
+            }
+            requestStats[rIdx].addRecord(e.getLevel(), e.getService());
         }
 
         ServiceStats[] rankedServices = new ServiceStats[serviceStatCount];
@@ -271,6 +324,17 @@ public class LogForge {
                 System.out.println("First Error: " + inc.firstTimestamp);
                 System.out.println("Last Error: " + inc.lastTimestamp);
             }
+        }
+
+        System.out.println();
+        for (int i = 0; i < requestStatCount; i++) {
+            RequestStats r = requestStats[i];
+            System.out.println("Request " + r.requestId + ": " + (r.isFailed() ? "FAILED" : "SUCCESS"));
+            System.out.println("Records: " + r.total);
+            System.out.println("Errors: " + r.errors);
+            StringBuilder sb = new StringBuilder("Services:");
+            for (int k = 0; k < r.serviceCount; k++) sb.append(" ").append(r.services[k]);
+            System.out.println(sb);
         }
     }
 
